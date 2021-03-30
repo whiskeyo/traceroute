@@ -2,32 +2,74 @@
 
 ## What is `traceroute` for?
 
-`traceroute` is used for tracing IP addresses of routers on the route from the source up to the destination. It also shows average response times on every hop. This version of `traceroute` handles only IPv4 and web addresses (such like `google.com`) **can not be resolved**. 
+`traceroute` is used for tracing IP addresses of routers on the route from the source up to the destination. It also shows average response times on every hop. This version of `traceroute` handles only IPv4 and web addresses (such like `google.com`) **can not be resolved**.
 
 ## Example usage
 
 In order for `traceroute` to work, you need *root* privileges. It is caused because of creating raw sockets. Example call might be:
 
 ```
-sudo ./traceroute 156.17.254.113
+sudo ./traceroute 156.17.4.1
 ```
 
 Possible output:
 
 ```
- 1.          192.168.0.1        2 ms
- 2.                * * *
- 3.         172.20.253.1        9 ms
- 4.          172.17.39.9        22 ms
- 5.         172.17.39.10        19 ms
- 6.         172.17.39.13        20 ms
- 7.        172.17.28.194        25 ms
- 8.        172.17.28.194        27 ms
- 9.      213.249.121.205        57 ms
-10.           4.69.159.5        51 ms
-11.        212.162.10.82        53 ms
-12.      212.191.224.106        56 ms
-13.       156.17.254.113        55 ms
+ 1.        192.168.0.1  2 ms
+ 2.              * * *
+ 3.       172.20.253.1  12 ms
+ 4.        172.17.39.9  37 ms
+ 5.       172.17.39.10  37 ms
+ 6.       172.17.39.13  37 ms
+ 7.      172.17.28.194  ???
+ 8.      172.17.28.194  ???
+ 9.    213.249.121.205  76 ms
+10.         4.69.159.5  64 ms
+11.      212.162.10.82  76 ms
+12.    212.191.224.106  ???
+13.      156.17.254.70  ???
+14.     156.17.254.105  74 ms
+15.      156.17.252.37  ???
+16.      156.17.252.26  75 ms
+17.      156.17.252.25  74 ms
+18.         156.17.4.1  78 ms
+```
+
+## Extra debugging information
+
+You may receive extra debugging infromation when you compile `traceroute` with `make debug`. Running the program will show you socket file descriptor's number, process id of `traceroute`, and extra data about packets sent: TTL, sequence numbers, IPs of routers that answered or suitable information if it has not. Example output:
+
+```
+[DEBUG] Debug session started
+[DEBUG] Socket file descriptor: 3, process id: 3601
+
+[DEBUG] TTL: 1, sequence numbers: {1, 2, 3}
+[DEBUG] Router no. 1 is 192.168.0.1, response time is 3 ms
+[DEBUG] Router no. 2 is 192.168.0.1, response time is 3 ms
+[DEBUG] Router no. 3 is 192.168.0.1, response time is 3 ms
+[DEBUG] Correctly received info from all routers
+[ROUTE]  1.        192.168.0.1  3 ms
+
+[DEBUG] TTL: 2, sequence numbers: {4, 5, 6}
+[DEBUG] Router no. 1 is missing an answer
+[DEBUG] Router no. 2 is missing an answer
+[DEBUG] Router no. 3 is missing an answer
+[DEBUG] None of the routers answered, IP unknown
+[ROUTE]  2.              * * *
+
+[DEBUG] TTL: 3, sequence numbers: {7, 8, 9}
+[DEBUG] Router no. 1 is 172.20.253.1, response time is 10 ms
+[DEBUG] Router no. 2 is 172.20.253.1, response time is 10 ms
+[DEBUG] Router no. 3 is 172.20.253.1, response time is 18 ms
+[DEBUG] Correctly received info from all routers
+[ROUTE]  3.       172.20.253.1  12 ms
+
+[DEBUG] TTL: 4, sequence numbers: {10, 11, 12}
+[DEBUG] Router no. 1 is 172.17.39.9, response time is 36 ms
+[DEBUG] Router no. 2 is 172.17.39.9, response time is 36 ms
+[DEBUG] Router no. 3 is missing an answer
+[DEBUG] One of routers has not answered or timed out
+[ROUTE]  4.        172.17.39.9  ???
 ```
 
 ## How does it work?

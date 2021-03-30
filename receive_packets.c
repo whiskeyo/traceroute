@@ -78,7 +78,8 @@ struct recvdata parse_answer(char ips[3][20], uint32_t response_times[3]) {
             no_ips_received = false;
 
 #ifdef DEBUG
-    fprintf(stderr, DEBUGLOG " Router no. %d is %s\n", i + 1, ips[i]);
+    fprintf(stderr, DEBUGLOG " Router no. %d is %s, response time is %d ms\n", 
+        i + 1, ips[i], response_times[i]);
 #endif
 
             if (i == 0)

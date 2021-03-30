@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
     uint16_t pid = getpid();
 
 #ifdef DEBUG
-    fprintf(stderr, DEBUGLOG " Socket file descriptor: %d, process id: %d\n\n", 
+    fprintf(stderr, DEBUGLOG " Socket file descriptor: %d, process id: %d\n", 
             sockfd, pid);
 #endif
 
@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
         // Based on TTL value, sequence number is generated. It needs to be
         // used, as we need to know where packets belong (each hop has three
         // packets sent, we want to identify each of them).
-        uint16_t seqnums[3] = { 3 * TTL, 3 * TTL + 1, 3 * TTL + 2};
+        uint16_t seqnums[3] = { 3 * TTL - 2, 3 * TTL - 1, 3 * TTL};
         
 #ifdef DEBUG
         fprintf(stderr, "\n" DEBUGLOG " TTL: %d, sequence numbers: {%d, %d, %d}\n",
