@@ -13,11 +13,15 @@
 #include "helpers.h"
 
 int main(int argc, char* argv[]) {
+#ifdef DEBUG
+    fprintf(stderr, DEBUGLOG " Debug session started\n");
+#endif
+    
     if (argc != 2) {
         fprintf(stderr, "[ERR] Invalid call! Usage: %s [IP]\n", argv[0]);
         return EXIT_FAILURE;
     }
-
+    
     if (!is_valid_ip_address(argv[1])) {
         fprintf(stderr, "[ERR] Passed argument is not valid IPv4 address.\n");
         return EXIT_FAILURE;
@@ -33,6 +37,11 @@ int main(int argc, char* argv[]) {
 
     uint16_t pid = getpid();
 
+#ifdef DEBUG
+    fprintf(stderr, DEBUGLOG " Socket file descriptor: %d, process id: %d\n\n", 
+            sockfd, pid);
+#endif
+
     for (int TTL = 1; TTL <= 30; TTL++) {
         // Set socket options. We want to set TTL field for every packet, thus
         // we pass IP_TTL and its value to the socket. Thanks to it, we will
@@ -47,19 +56,28 @@ int main(int argc, char* argv[]) {
         // packets sent, we want to identify each of them).
         uint16_t seqnums[3] = { 3 * TTL, 3 * TTL + 1, 3 * TTL + 2};
         
+#ifdef DEBUG
+        fprintf(stderr, "\n" DEBUGLOG " TTL: %d, sequence numbers: {%d, %d, %d}\n",
+                TTL, seqnums[0], seqnums[1], seqnums[2]);
+#endif
+
         send_packets(argv[1], sockfd, pid, seqnums);
         struct recvdata response = receive_packets(sockfd, pid, seqnums);
 
+#ifdef DEBUG
+        fprintf(stderr, ROUTELOG " ");
+#endif
+
         switch (response.answer) {
             case CORRECT: 
-                printf("%2d. %20s\t%d ms\n", 
+                printf("%2d. %18s\t%d ms\n", 
                     TTL, response.ips, response.avg_response_time);
                 break;
             case MISSING_ANSWER:
-                printf("%2d. %20s ???\n", TTL, response.ips);
+                printf("%2d. %18s\t???\n", TTL, response.ips);
                 break;
             case NO_ANSWERS_IN_TIME:
-                printf("%2d. %20s\n", TTL, "* * *");
+                printf("%2d. %18s\n", TTL, "* * *");
                 break;
         }
 

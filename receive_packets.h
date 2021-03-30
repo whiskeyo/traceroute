@@ -4,6 +4,12 @@
 
 #include <stdint.h>
 
+#define ANSI_COLOR_RED      "\x1b[31m"
+#define ANSI_COLOR_GREEN    "\x1b[32m"
+#define ANSI_COLOR_RESET    "\x1b[0m"
+#define DEBUGLOG            ANSI_COLOR_RED "[DEBUG]" ANSI_COLOR_RESET
+#define ROUTELOG            ANSI_COLOR_GREEN "[ROUTE]" ANSI_COLOR_RESET
+
 enum answer_e {
     CORRECT,            // prints IP AVGTIME
     MISSING_ANSWER,     // prints IP ???

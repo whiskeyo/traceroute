@@ -20,6 +20,11 @@ receive_packets.o: receive_packets.c receive_packets.h
 helpers.o: helpers.c helpers.h
 	$(CC) -c $(STD) $(CFLAGS) helpers.c -o helpers.o
 
+all: $(TARGET)
+
+debug: CFLAGS += -DDEBUG -g
+debug: $(TARGET)
+
 test:
 	sudo ./traceroute 156.17.4.1
 
