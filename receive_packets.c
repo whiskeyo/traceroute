@@ -85,8 +85,8 @@ struct recvdata parse_answer(char ips[3][20], uint32_t response_times[3]) {
             if (i == 0)
                 append_ips(ips_str, ips[0], 0);
             else if (i == 1 && ips[1][0] != '\0' && (strcmp(ips[0], ips[1]) != 0)) 
-                append_ips(ips_str, ips[0], 1);
-            else if (ips[2][0] != '\0' &&
+                append_ips(ips_str, ips[1], 1);
+            else if (i == 2 && ips[2][0] != '\0' &&
                     (strcmp(ips[0], ips[2]) != 0 || strcmp(ips[1], ips[2]) != 0)) 
                 append_ips(ips_str, ips[2], 2);   
         }
